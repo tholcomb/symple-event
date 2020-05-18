@@ -1,0 +1,26 @@
+{
+    "name": "tholcomb/symple-event",
+    "description": "Event component of the Symple Framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tyler Holcomb",
+            "email": "tyler@tholcomb.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Tholcomb\\Symple\\Event\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.2",
+        "tholcomb/symple-core": "^1.0",
+        "symfony/event-dispatcher": "^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    }
+}
