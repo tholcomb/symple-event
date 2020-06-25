@@ -12,6 +12,7 @@ namespace Tholcomb\Symple\Event;
 
 use Pimple\Container;
 use Pimple\Exception\FrozenServiceException;
+use Pimple\Psr11\ServiceLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Tholcomb\Symple\Core\AbstractProvider;
 use Tholcomb\Symple\Core\UnregisteredProviderException;
@@ -44,8 +45,9 @@ class EventProvider extends AbstractProvider {
 		$key = static::SUBSCRIBER_PREFIX . $class;
 		$c[$key] = $definition;
 		$extension = function (LazyEventDispatcher $dispatcher, Container $c) use ($class, $key) {
-			$dispatcher->addLazySubscriber($class, function () use ($c, $key) {
-				return $c[$key];
+			$loc = new ServiceLocator($c, ['sub' => $key]);
+			$dispatcher->addLazySubscriber($class, function () use ($loc) {
+				return $loc->get('sub');
 			});
 			return $dispatcher;
 		};
@@ -61,8 +63,9 @@ class EventProvider extends AbstractProvider {
 		$key = static::SUBSCRIBER_PREFIX . "$eventName.$method.$priority." . microtime();
 		$c[$key] = $definition;
 		$extension = function (LazyEventDispatcher $dispatcher, Container $c) use ($eventName, $key, $method, $priority) {
-			$dispatcher->addLazyListener($eventName, function () use ($c, $key) {
-				return $c[$key];
+			$loc = new ServiceLocator($c, ['listener' => $key]);
+			$dispatcher->addLazyListener($eventName, function () use ($loc) {
+				return $loc->get('listener');
 			}, $method, $priority);
 			return $dispatcher;
 		};
